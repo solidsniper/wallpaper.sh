@@ -103,7 +103,7 @@ usage(){
 }
 
 set_wallpaper() {
-    m wallpaper "${cachedir}/wallpaper"${UUID}".jpg"
+    osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'"${cachedir}/wallpaper"${UUID}".jpg"'"'
 }
 
 set=true

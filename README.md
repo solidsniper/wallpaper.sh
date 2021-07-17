@@ -15,11 +15,6 @@ https://brew.sh/index
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-  Swiss Army Knife for macOS ! 
-```
-brew install m-cli
-```
-
 gnu-getopt
 ```
 brew install gnu-getopt

@@ -13,7 +13,7 @@ if [ -z ${XDG_CACHE_HOME+x} ]
 then
     XDG_CACHE_HOME="${HOME}/Library/Caches/.cache"
 fi
-confdir="${XDG_CONFIG_HOME}/wallpaper.sh"
+confdir="${XDG_CONFIG_HOME}"
 if [ ! -d "${confdir}" ]
 then
     mkdir -p "${confdir}"
@@ -24,7 +24,6 @@ if [ ! -d "${cachedir}" ]
 then
     mkdir -p "${cachedir}"
 fi
-
 export LC_ALL=C
 UUID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 6 | head -n 1)
 
@@ -102,8 +101,12 @@ usage(){
     exit 2
 }
 
-set_wallpaper() {
+set_wallpaper_one() {
     osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'"${cachedir}/wallpaper"${UUID}".jpg"'"'
+}
+
+set_wallpaper() {
+    osascript -e 'tell application "System Events" to tell every desktop to set picture to "'"${cachedir}/wallpaper"${UUID}".jpg"'"'
 }
 
 set=true

@@ -2,7 +2,12 @@
 # PATH is needed for crontabs on McOS
 PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
-link="https://source.unsplash.com/random/"
+access_key="fa4a63f4a43a5a351720045914fa27f79bf915e92412777b24da0de349facbf6"
+
+min_width=1440
+
+# Make the API request and extract the image URL using jq
+link=$(curl -s "https://api.unsplash.com/photos/random/?client_id=$access_key&min_width=$min_width" | /opt/homebrew/bin/jq -r '.urls.full')
 
 if [ -z ${XDG_CONFIG_HOME+x} ]
 then
@@ -72,23 +77,23 @@ reddit(){
     target_id=${arrIDS[$idx]}
     ext=`echo -n "${target_url##*.}"|cut -d '?' -f 1`
     newname=`echo $target_name | sed "s/^\///;s/\// /g"`_"$subreddit"_$target_id.$ext
-    wget -T $timeout -U "$useragent" --no-check-certificate -q -P down -O "${cachedir}/wallpaper"${UUID}".jpg" $target_url &>/dev/null
+    /opt/homebrew/bin/wget -T $timeout -U "$useragent" --no-check-certificate -q -P down -O "${cachedir}/wallpaper"${UUID}".jpg" $target_url &>/dev/null
 }
 
 unsplash() {
-    local search="${search// /_}"
+    # local search="${search// /_}"
 
-    if [ ! -z $height ] || [ ! -z $width ]; then
-        link="${link}${width}x${height}";
-    else
-        link="${link}1920x1080";
-    fi
+    # if [ ! -z $height ] || [ ! -z $width ]; then
+    #     link="${link}${width}x${height}";
+    # else
+    #     link="${link}1920x1080";
+    # fi
 
-    if [ ! -z $search ]
-    then
-        link="${link}/?${search}"
-    fi
-    wget -q -O "${cachedir}/wallpaper"${UUID}".jpg" $link
+    # if [ ! -z $search ]
+    # then
+    #     link="${link}/?${search}"
+    # fi
+    /opt/homebrew/bin/wget -q -O "${cachedir}/wallpaper"${UUID}".jpg" $link
 }
 
 usage(){
@@ -111,7 +116,7 @@ set_wallpaper() {
 
 set=true
 
-PARSED_ARGUMENTS=$("$(brew --prefix gnu-getopt)"/bin/getopt -a -n $0 -o h:w:s:l:r:c:d:m:pkn --long search:,height:,width:,subreddit:,link -- "$@")
+PARSED_ARGUMENTS=$("$(/opt/homebrew/bin/brew --prefix gnu-getopt)"/bin/getopt -a -n $0 -o h:w:s:l:r:c:d:m:pkn --long search:,height:,width:,subreddit:,link -- "$@")
 VALID_ARGUMENTS=$?
 if [ "$VALID_ARGUMENTS" != "0" ]; then
     usage
